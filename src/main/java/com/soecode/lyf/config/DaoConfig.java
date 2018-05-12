@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:jdbc.properties")
@@ -49,16 +48,16 @@ public class DaoConfig {
     }
 
     @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
-        Properties properties = new Properties();
-        properties.put("useGeneratedKeys", true);
-        properties.put("useColumnLabel", true);
-        properties.put("mapUnderscoreToCamelCase", true);
-        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setTypeAliasesPackage("com.soecode.lyf.entity");
-        bean.setConfigurationProperties(properties);
-        bean.setDataSource(dataSource);
-        return bean;
+    public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource) {
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setUseColumnLabel(true);
+        configuration.setUseGeneratedKeys(true);
+        configuration.setMapUnderscoreToCamelCase(true);
+        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+        factory.setTypeAliasesPackage("com.soecode.lyf.entity");
+        factory.setDataSource(dataSource);
+        factory.setConfiguration(configuration);
+        return factory;
     }
 
     @Bean
